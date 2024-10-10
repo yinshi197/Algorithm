@@ -1,6 +1,13 @@
 {
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "ios": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "utility": "cpp",
+        "cmath": "cpp"
     },
     "Lingma.cloudModelEnable": false
 }
