@@ -16,6 +16,7 @@ public:
         ListNode *slow= head;
         while(fast != nullptr && fast->next != nullptr)
         {
+            //先移动再判断
             fast = fast->next->next;
             slow = slow->next;
 
