@@ -7,7 +7,15 @@
         "iostream": "cpp",
         "ostream": "cpp",
         "utility": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "initializer_list": "cpp",
+        "xutility": "cpp",
+        "set": "cpp",
+        "xlocale": "cpp",
+        "xtree": "cpp",
+        "unordered_set": "cpp",
+        "xhash": "cpp",
+        "list": "cpp"
     },
     "Lingma.cloudModelEnable": false
 }
