@@ -15,7 +15,9 @@
         "xtree": "cpp",
         "unordered_set": "cpp",
         "xhash": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "string": "cpp"
     },
-    "Lingma.cloudModelEnable": false
+    "Lingma.cloudModelEnable": false,
+    "C_Cpp.errorSquiggles": "disabled"
 }

@@ -28,21 +28,6 @@ public:
             next[i] = j;
         }
     }
-
-    bool repeatedSubstringPattern(string s) {
-        
-        if(s.size() == 0) return false;
-
-        int next[s.size()];
-        getNext(next, s);
-        int len = s.size();
-        if(next[len - 1] != -1 && len % (len - next[len - 1] -1) == 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
 };
 
 int main(int argc, char **argv)
@@ -50,8 +35,11 @@ int main(int argc, char **argv)
     string s = "abcabcabcabc";
     vector<int> next(s.size());
     Solution *so = new Solution();
-    bool ret = so->repeatedSubstringPattern(s);
-    cout << ret << "\n";
+    so->getNext(&next[0], s);
+    for(auto i : next)
+    {
+        cout << i << " ";
+    }
 
     return 0;
 }

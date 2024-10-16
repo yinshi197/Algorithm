@@ -29,29 +29,37 @@ public:
         }
     }
 
-    bool repeatedSubstringPattern(string s) {
-        
-        if(s.size() == 0) return false;
-
-        int next[s.size()];
-        getNext(next, s);
-        int len = s.size();
-        if(next[len - 1] != -1 && len % (len - next[len - 1] -1) == 0)
+    int strStr(string haystack, string needle) {
+        if(needle.size() == 0) return 0;
+        vector<int> next(needle.size());
+        getNext(&next[0], needle);
+        int j = -1;
+        for(int i = 0; i < haystack.size(); i++)
         {
-            return true;
+            while(j >= 0 && haystack[i] != needle[j + 1])
+            {
+                j = next[j];
+            }
+
+            if(haystack[i] == needle[j + 1])  j++;  //i++在for循环里面
+
+            if(j == needle.size() - 1)
+            {
+                return (i - needle.size() + 1);
+            }
         }
 
-        return false;
+        return -1;
     }
 };
 
 int main(int argc, char **argv)
 {
-    string s = "abcabcabcabc";
-    vector<int> next(s.size());
+    string s = "babba";
+    string t = "bbb";
     Solution *so = new Solution();
-    bool ret = so->repeatedSubstringPattern(s);
-    cout << ret << "\n";
+    int ret = so->strStr(s, t);
+    cout << ret << endl;
 
     return 0;
 }
