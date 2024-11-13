@@ -12,29 +12,28 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    vector<double> averageOfLevels(TreeNode* root) {
+        queue<TreeNode*> que;
+        vector<double> ret;
+        if(root != nullptr) que.push(root);
 
-        while(!st.empty())
+        while(!que.empty())
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
+            int size = que.size();
+            double sum = 0;
+            for(int i = 0; i < size; i++)
             {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
+                TreeNode *node = que.front();
+                que.pop();
+                sum += node->val;
+                if(node->left) que.push(node->left);
+                if(node->right) que.push(node->right);
             }
 
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
+            ret.push_back(sum / size);
         }
 
-        return false;
+        return ret;
     }
 };
 
@@ -87,7 +86,11 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
-    cout << ret << endl;
+    vector<double> ret = so->averageOfLevels(root);
+    for(auto i : ret)
+    {
+        cout << i << " ";
+    }
+
     return 0;
 }

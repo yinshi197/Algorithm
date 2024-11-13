@@ -12,29 +12,36 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    int ret = 0;
 
-        while(!st.empty())
+    void getdepth(TreeNode* root, int depth)
+    {
+        ret = depth > ret ? depth : ret;    //中
+        if(root->left == nullptr && root->right == nullptr) return;
+
+        if(root->left)  //左
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
-            {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
-
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
+            depth++;
+            getdepth(root->left, depth);
+            depth--; //回溯
         }
 
-        return false;
+        if(root->right) //右
+        {
+            depth++;
+            getdepth(root->right, depth);
+            depth--;
+        }
+
+        return;
+    }
+
+    int maxDepth(TreeNode* root) {
+        if(root == nullptr) return ret;
+
+        getdepth(root, 1);
+
+        return ret;
     }
 };
 
@@ -87,7 +94,7 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
+    int ret = so->maxDepth(root);
     cout << ret << endl;
     return 0;
 }

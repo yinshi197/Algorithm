@@ -12,29 +12,22 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    int getHeigth(TreeNode* root)
+    {
+        if(root == nullptr) return 0;
+        int leftH = getHeigth(root->left);
+        int rightH = getHeigth(root->right);
 
-        while(!st.empty())
-        {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
+        if(leftH == -1) return -1;
+        if(rightH == -1) return -1;
 
-            if(node.first->right)
-            {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
+        return abs(leftH - rightH) > 1 ? -1 : 1 + max(leftH, rightH);
+    }
 
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
-        }
-
+    bool isBalanced(TreeNode* root) {
+        if(getHeigth(root) == -1)
         return false;
+        return true;
     }
 };
 
@@ -87,7 +80,7 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
+    bool ret = so->isBalanced(root);
     cout << ret << endl;
     return 0;
 }

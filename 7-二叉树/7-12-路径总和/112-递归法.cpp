@@ -12,29 +12,28 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    bool traversal(TreeNode* root, int targetSum)
+    {
+        if(!root->left && !root->right && targetSum == 0) return true;
+        if(!root->left && !root->right) return false;
 
-        while(!st.empty())
+        if(root->left)
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
+            if(traversal(root->left, targetSum - root->left->val))
             return true;
-
-            if(node.first->right)
-            {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
-
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
+        }
+        if(root->right) 
+        {
+            if(traversal(root->right, targetSum - root->right->val))
+            return true;
         }
 
         return false;
+    }
+        
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(!root) return false;
+        return traversal(root, targetSum - root->val);
     }
 };
 

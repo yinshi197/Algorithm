@@ -12,29 +12,10 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    int countNodes(TreeNode* root) {
+        if(root == nullptr) return 0;
 
-        while(!st.empty())
-        {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
-            {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
-
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
-        }
-
-        return false;
+        return 1 + countNodes(root->left) + countNodes(root->right);
     }
 };
 
@@ -87,7 +68,7 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
+    int ret = so->countNodes(root);
     cout << ret << endl;
     return 0;
 }

@@ -12,29 +12,25 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
-
-        while(!st.empty())
+    int countNodes(TreeNode* root) {
+        queue<TreeNode*> que;
+        if(root != nullptr) que.push(root);
+        int ret = 0;
+        while(!que.empty())
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
+            int size = que.size();
+            ret += size;
 
-            if(node.first->right)
+            for(int i = 0; i < size; i++)
             {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
-
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
+                TreeNode* node = que.front();
+                que.pop();
+                if(node->left) que.push(node->left);
+                if(node->right) que.push(node->right);
             }
         }
 
-        return false;
+        return ret;
     }
 };
 
@@ -87,7 +83,7 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
+    int ret = so->countNodes(root);
     cout << ret << endl;
     return 0;
 }

@@ -12,29 +12,43 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
-
-        while(!st.empty())
+    void traversal(TreeNode* cur, vector<int>& path, vector<string>& ret)
+    {
+        path.push_back(cur->val);
+        if(cur->right == nullptr && cur->left == nullptr)
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
+            string spath;
+            for(int i = 0; i < path.size() - 1; i++)
             {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
+                spath += to_string(path[i]);
+                spath += "->";
             }
 
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
+            spath += to_string(path[path.size() - 1]);
+            ret.push_back(spath);
+            return;
         }
 
-        return false;
+        if(cur->left)
+        {
+            traversal(cur->left, path, ret);
+            path.pop_back();
+        }
+
+        if(cur->right)
+        {
+            traversal(cur->right, path, ret);
+            path.pop_back();
+        }
+    }
+
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<int> path;
+        vector<string> ret;
+        if(root == nullptr) return ret;
+        traversal(root, path, ret);
+
+        return ret;
     }
 };
 
@@ -87,7 +101,10 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
-    cout << ret << endl;
+    vector<string> ret = so->binaryTreePaths(root);
+    for(auto s : ret)
+    {
+        cout << s << endl;
+    }
     return 0;
 }

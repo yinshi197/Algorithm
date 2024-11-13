@@ -16,7 +16,16 @@
         "unordered_set": "cpp",
         "xhash": "cpp",
         "list": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "unordered_map": "cpp",
+        "type_traits": "cpp",
+        "deque": "cpp",
+        "format": "cpp",
+        "array": "cpp",
+        "ranges": "cpp",
+        "span": "cpp"
     },
     "Lingma.cloudModelEnable": false,
     "C_Cpp.errorSquiggles": "disabled"

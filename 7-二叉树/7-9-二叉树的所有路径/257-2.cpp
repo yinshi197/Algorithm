@@ -12,29 +12,29 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
-
-        while(!st.empty())
+    void traversal(TreeNode* cur, string path, vector<string>& ret)
+    {
+        path += to_string(cur->val);
+        if(cur->left == nullptr && cur->right == nullptr)
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
-            {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
-
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
+            ret.push_back(path);
+            return;
         }
 
-        return false;
+        //path + "->" 作为参数传入，没有改变path的值，相当于执行函数后自动回溯了
+        //path1(函数执行的path) = path + "->";
+        if(cur->left) traversal(cur->left, path + "->", ret);   //左
+        if(cur->right) traversal(cur->right, path + "->", ret); //右
+    }
+
+    vector<string> binaryTreePaths(TreeNode* root) {
+        string path;
+        vector<string> ret;
+        if(root == nullptr) return ret;
+
+        traversal(root, path, ret);
+
+        return ret;
     }
 };
 
@@ -87,7 +87,10 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
-    cout << ret << endl;
+    vector<string> ret = so->binaryTreePaths(root);
+    for(auto s : ret)
+    {
+        cout << s << endl;
+    }
     return 0;
 }

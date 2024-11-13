@@ -12,29 +12,30 @@ struct TreeNode
 
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    vector<int> largestValues(TreeNode* root) {
+        queue<TreeNode*> que;
+        if(root != nullptr) que.push(root);
+        vector<int> ret;
 
-        while(!st.empty())
+        while(!que.empty())
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
+            int size = que.size();
+            //int max = que.front()->val;
+            int max = INT_MIN;
+            for(int i = 0; i < size; i++)
             {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
+                TreeNode *node = que.front();
+                que.pop();
+                max = max >= node->val ? max : node->val;
+
+                if(node->left) que.push(node->left);
+                if(node->right) que.push(node->right);
             }
 
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
+            ret.push_back(max);
         }
 
-        return false;
+        return ret;
     }
 };
 
@@ -87,7 +88,11 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
-    cout << ret << endl;
+    vector<int> ret = so->largestValues(root);
+    for(auto i : ret)
+    {
+        cout << i << " ";
+    }
+
     return 0;
 }

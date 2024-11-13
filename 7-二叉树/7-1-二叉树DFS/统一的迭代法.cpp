@@ -10,31 +10,38 @@ struct TreeNode
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
+//统一迭代法,使用null标记访问过但未处理的节点
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ret;
+        stack<TreeNode*> st;
+        if(root != nullptr) st.push(root);
 
         while(!st.empty())
         {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
-
-            if(node.first->right)
+            TreeNode *node = st.top();  //每次都是从左节点进入下一层
+            if(node)
             {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
+                st.pop();
+                if(node->right) st.push(node->right);   //加入右节点
+
+                st.push(node);  //加入中间节点
+                st.push(nullptr);   //标记中间节点访问过，但是没有处理
+
+                if(node->left) st.push(node->left); //最后加入左节点
             }
-
-            if (node.first->left) 
+            else
             {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
+                st.pop();   //弹出空节点
+                node = st.top();
+                st.pop();
+
+                ret.push_back(node->val);
             }
         }
 
-        return false;
+        return ret;
     }
 };
 
@@ -87,7 +94,11 @@ int main(int argc, char **argv)
     }
     TreeNode *root = createTree(test);
     Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
-    cout << ret << endl;
+    vector<int> ret = so->inorderTraversal(root);
+    for(auto i : ret)
+    {
+        cout << i << " ";
+    }
+
     return 0;
 }

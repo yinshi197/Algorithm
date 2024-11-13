@@ -10,31 +10,25 @@ struct TreeNode
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-class Solution {
+//递归法只需要修改节点顺序就可以实现前、中、后序的遍历
+class Soilution
+{
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        if(root) st.push(pair<TreeNode*, int>(root, root->val));
+    void traversal(TreeNode *cur, vector<int> &vec)
+    {
+        if(cur == nullptr) return;  
+        vec.push_back(cur->val);    // 中
+        traversal(cur->left, vec);  // 左
+        traversal(cur->right, vec); // 右
+    }
 
-        while(!st.empty())
-        {
-            pair<TreeNode*, int> node = st.top();
-            st.pop();
-            if(!node.first->left && !node.first->right && targetSum == node.second)
-            return true;
+    //前序遍历
+    vector<int> preorderTraversal(TreeNode *root)
+    {
+        vector<int> ret;
+        traversal(root, ret);
 
-            if(node.first->right)
-            {
-                st.push(pair<TreeNode*, int>(node.first->right, node.second + node.first->right->val));
-            }
-
-            if (node.first->left) 
-            {
-                st.push(pair<TreeNode*, int>(node.first->left, node.second + node.first->left->val));
-            }
-        }
-
-        return false;
+        return ret;
     }
 };
 
@@ -86,8 +80,12 @@ int main(int argc, char **argv)
         else test.push_back(new int(stoi(ch)));
     }
     TreeNode *root = createTree(test);
-    Solution *so = new Solution();
-    bool ret = so->hasPathSum(root, 22);
-    cout << ret << endl;
+    Soilution *so = new Soilution();
+    vector<int> ret = so->preorderTraversal(root);
+    for(auto i : ret)
+    {
+        cout << i << " ";
+    }
+
     return 0;
 }
