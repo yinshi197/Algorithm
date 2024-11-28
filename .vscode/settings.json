@@ -25,7 +25,8 @@
         "format": "cpp",
         "array": "cpp",
         "ranges": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "xlocinfo": "cpp"
     },
     "Lingma.cloudModelEnable": false,
     "C_Cpp.errorSquiggles": "disabled"

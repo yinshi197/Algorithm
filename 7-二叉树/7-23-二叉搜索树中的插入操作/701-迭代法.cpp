@@ -15,17 +15,28 @@ struct TreeNode
 
 class Solution {
 public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
-        if(root == nullptr) return root;
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if(root == nullptr)
+        {
+            TreeNode *node = new TreeNode(val);
+            return node;
+        }
 
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
+        TreeNode *cur = root;
+        TreeNode *pre = root;
+        while(cur != nullptr)
+        {
+            pre = cur;
+            if(cur->val > val) cur = cur->left;
+            else cur = cur->right;
+        }
+
+        TreeNode *node = new TreeNode(val);
+        if(pre->val > val) pre->left = node;
+        else pre->right = node;
 
         return root;
-    }   
+    }
 
     void traversal(TreeNode *cur, vector<int> &vec)
     {
@@ -94,10 +105,13 @@ int main(int argc, char **argv)
         else test.push_back(new int(stoi(ch)));
     }
 
+    int val;
+    cin >> val;
+
     TreeNode *root = createTree(test);
 
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
+    TreeNode *ret = so->insertIntoBST(root, val);
     vector<int> vec = so->preorderTraversal(ret);
     
     for(auto i : vec)

@@ -15,33 +15,33 @@ struct TreeNode
 
 class Solution {
 public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
-        if(root == nullptr) return root;
+    int getMinimumDifference(TreeNode* root) {
+        int ret = INT_MAX;
+        stack<TreeNode*> st;
+        TreeNode* cur = root;
+        TreeNode* pre = nullptr;
 
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
+        while(cur != nullptr || !st.empty())
+        {
+            if(cur != nullptr)
+            {
+                st.push(cur);
+                cur = cur->left;
+            }
+            else
+            {
+                cur = st.top();
+                st.pop();
 
-        return root;
-    }   
+                if(pre != nullptr)
+                {
+                    ret = min(ret, cur->val - pre->val);
+                }
+                pre = cur;
 
-    void traversal(TreeNode *cur, vector<int> &vec)
-    {
-        if(cur == nullptr) return;  
-        
-        traversal(cur->left, vec);  // 左
-        vec.push_back(cur->val);    // 中
-        traversal(cur->right, vec); // 右
-    }
-
-    //前序遍历
-    vector<int> preorderTraversal(TreeNode *root)
-    {
-        vector<int> ret;
-        traversal(root, ret);
-
+                cur = cur->right;
+            }
+        }
         return ret;
     }
 };
@@ -97,13 +97,8 @@ int main(int argc, char **argv)
     TreeNode *root = createTree(test);
 
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
-    vector<int> vec = so->preorderTraversal(ret);
-    
-    for(auto i : vec)
-    {
-        cout << i << " ";
-    }
+    int ret = so->getMinimumDifference(root);
+    cout << ret << endl;
     
     return 0;
 }

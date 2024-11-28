@@ -80,14 +80,22 @@ public:
 
 int main(int argc, char **argv)
 {
-    string s = "010101";
-    vector<vector<int>> vect = {{0,5}, {1,4}, {2,3}};
-    vector<long long> ret;
-    Solution *so = new Solution();
-    ret = so->countKConstraintSubstrings(s, 1, vect);
-    for(auto i : ret)
+    // string s = "010101";
+    // vector<vector<int>> vect = {{0,5}, {1,4}, {2,3}};
+    // vector<long long> ret;
+    // Solution *so = new Solution();
+    // ret = so->countKConstraintSubstrings(s, 1, vect);
+    // for(auto i : ret)
+    // {
+    //     cout << i << " ";
+    // }
+    int var = 1;
     {
-        cout << i << " ";
+        int var = 2;
+        cout << var << endl;
     }
+
+    cout << var << endl;
+
     return 0;
 }

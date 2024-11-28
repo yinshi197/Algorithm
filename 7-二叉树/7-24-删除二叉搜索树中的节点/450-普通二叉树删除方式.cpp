@@ -15,17 +15,28 @@ struct TreeNode
 
 class Solution {
 public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
+    TreeNode* deleteNode(TreeNode* root, int key) {
         if(root == nullptr) return root;
 
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
+        if(root->val == key)
+        {
+            if(root->right == nullptr)
+                return root->left;
+            
+            TreeNode *cur = root->right;
+            while(cur->left != nullptr)
+            {
+                cur = cur->left;
+            }
+            swap(cur->val, root->val);
+        }
+        
+        //遍历整个二叉树，而不是某条边
+        root->left = deleteNode(root->left, key);
+        root->right = deleteNode(root->right, key);
 
         return root;
-    }   
+    }
 
     void traversal(TreeNode *cur, vector<int> &vec)
     {
@@ -94,10 +105,13 @@ int main(int argc, char **argv)
         else test.push_back(new int(stoi(ch)));
     }
 
+    int val;
+    cin >> val;
+
     TreeNode *root = createTree(test);
 
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
+    TreeNode *ret = so->deleteNode(root, val);
     vector<int> vec = so->preorderTraversal(ret);
     
     for(auto i : vec)

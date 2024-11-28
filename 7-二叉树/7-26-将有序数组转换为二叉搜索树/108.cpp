@@ -15,16 +15,21 @@ struct TreeNode
 
 class Solution {
 public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
-        if(root == nullptr) return root;
-
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
+    TreeNode* traversalCreate(vector<int>& nums, int left, int right)
+    {
+        //1.终止条件
+        if(left > right) return nullptr;
+        
+        int mid = left + (right - left) / 2;
+        TreeNode *root = new TreeNode(nums[mid]);
+        root->left = traversalCreate(nums, left, mid - 1);
+        root->right = traversalCreate(nums, mid + 1, right);
 
         return root;
+    }
+
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return traversalCreate(nums, 0, nums.size() - 1);   
     }   
 
     void traversal(TreeNode *cur, vector<int> &vec)
@@ -82,22 +87,9 @@ TreeNode* createTree(const std::vector<int*>& nodes)
 
 int main(int argc, char **argv)
 {   
-    vector<int*> test;
-    string ch;
-    while(cin >> ch)
-    {
-        if(ch == "q") break;
-        if(ch == "#" || ch == "null" || ch == "nullptr" || ch == "NULL")
-        {
-            test.push_back(nullptr);
-        }
-        else test.push_back(new int(stoi(ch)));
-    }
-
-    TreeNode *root = createTree(test);
-
+    vector<int> nums = {-10,-3,0,5,9};
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
+    TreeNode *ret = so->sortedArrayToBST(nums);
     vector<int> vec = so->preorderTraversal(ret);
     
     for(auto i : vec)

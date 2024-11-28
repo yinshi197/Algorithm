@@ -15,14 +15,25 @@ struct TreeNode
 
 class Solution {
 public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        //1.终止条件
         if(root == nullptr) return root;
 
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
+        if(root->val < low)
+        {
+            TreeNode* right = trimBST(root->right, low, high);
+            return right;
+        }
+
+        if(root->val > high)
+        {
+            TreeNode* left = trimBST(root->left, low, high);
+            return left;
+        }
+
+        //跳过不在区间内的节点
+        root->left = trimBST(root->left, low, high);
+        root->right = trimBST(root->right, low, high);
 
         return root;
     }   
@@ -94,10 +105,13 @@ int main(int argc, char **argv)
         else test.push_back(new int(stoi(ch)));
     }
 
+    int low, high;
+    cin >> low >> high;
+
     TreeNode *root = createTree(test);
 
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
+    TreeNode *ret = so->trimBST(root, low, high);
     vector<int> vec = so->preorderTraversal(ret);
     
     for(auto i : vec)

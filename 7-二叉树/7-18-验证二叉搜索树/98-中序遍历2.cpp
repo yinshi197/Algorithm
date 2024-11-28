@@ -1,8 +1,6 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include <vector>
-#include <stack>
-#include <queue>
 using namespace std;
 
 struct TreeNode
@@ -15,32 +13,42 @@ struct TreeNode
 
 class Solution {
 public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
-        if(root == nullptr) return root;
+    long long maxVal = LONG_MIN;
 
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
+    //中序遍历一直更新maxVal，确保maxval是一直递增的
+    bool isValidBST(TreeNode* root) {
+       if(root == nullptr) return true;
 
-        return root;
-    }   
+       bool left = isValidBST(root->left);  //左
+       
+       if(root->val > maxVal) maxVal = root->val;   //中
+       else return false;
 
-    void traversal(TreeNode *cur, vector<int> &vec)
-    {
-        if(cur == nullptr) return;  
-        
-        traversal(cur->left, vec);  // 左
-        vec.push_back(cur->val);    // 中
-        traversal(cur->right, vec); // 右
-    }
+       bool right = isValidBST(root->right);    //右
 
-    //前序遍历
-    vector<int> preorderTraversal(TreeNode *root)
-    {
-        vector<int> ret;
-        traversal(root, ret);
+       return left && right;
+    } 
+
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        queue<TreeNode*> que;
+        if(root != nullptr) que.push(root);
+        vector<vector<int>> ret;
+
+        while(!que.empty())
+        {
+            int size = que.size();  //记录size,后面会变化
+            vector<int> vec;
+            for(int i = 0; i < size; i++)
+            {
+                TreeNode *node = que.front();
+                que.pop();
+                vec.push_back(node->val);
+                if(node->left) que.push(node->left);
+                if(node->right) que.push(node->right);
+            }
+
+            ret.push_back(vec);;
+        }
 
         return ret;
     }
@@ -97,13 +105,8 @@ int main(int argc, char **argv)
     TreeNode *root = createTree(test);
 
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
-    vector<int> vec = so->preorderTraversal(ret);
-    
-    for(auto i : vec)
-    {
-        cout << i << " ";
-    }
+    bool ret = so->isValidBST(root);
+    cout << ret << endl;
     
     return 0;
 }

@@ -14,34 +14,37 @@ struct TreeNode
 };
 
 class Solution {
-public:
-    int count = 0;
-    TreeNode* convertBST(TreeNode* root) {
-        if(root == nullptr) return root;
+private:
+    vector<int> ret;
+    int count = 1;
+    int maxCount = 1;
+    TreeNode* pre = nullptr;
 
-        root->right = convertBST(root->right);
-        count += root->val;
-        root->val = count;
-        root->left = convertBST(root->left);
-
-        return root;
-    }   
-
-    void traversal(TreeNode *cur, vector<int> &vec)
+    void traversal(TreeNode* root)
     {
-        if(cur == nullptr) return;  
-        
-        traversal(cur->left, vec);  // 左
-        vec.push_back(cur->val);    // 中
-        traversal(cur->right, vec); // 右
+        if(root == nullptr) return;
+
+        traversal(root->left);
+        if(pre != nullptr && pre->val == root->val)
+        {
+            count++;
+        }
+        else count = 1;
+        pre = root;
+
+        if(count == maxCount) ret.push_back(root->val);
+        if(count > maxCount)
+        {
+            ret.clear();
+            maxCount = count;
+            ret.push_back(root->val);
+        }
+
+        traversal(root->right);
     }
-
-    //前序遍历
-    vector<int> preorderTraversal(TreeNode *root)
-    {
-        vector<int> ret;
-        traversal(root, ret);
-
+public:
+    vector<int> findMode(TreeNode* root) {
+        traversal(root);
         return ret;
     }
 };
@@ -97,12 +100,10 @@ int main(int argc, char **argv)
     TreeNode *root = createTree(test);
 
     Solution *so = new Solution();
-    TreeNode *ret = so->convertBST(root);
-    vector<int> vec = so->preorderTraversal(ret);
-    
-    for(auto i : vec)
+    vector<int> ret = so->findMode(root);
+    for(auto i : ret)
     {
-        cout << i << " ";
+        cout << i << endl;
     }
     
     return 0;
