@@ -4,61 +4,86 @@
 #include <algorithm>
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
+#include <map>
 using namespace std;
 
 class Solution {
 public:
-    vector<vector<int>> ret;
-    vector<int> path;
-
-    void backtracking(vector<int>& nums, vector<bool>& used)
+    bool isVaild(int row, int col, char val, vector<vector<char>>& borad)
     {
-        if(path.size() == nums.size())
+        for(int i = 0; i < 9; i++)  //判断是否行重复
         {
-            ret.push_back(path);
-            return;
+            if(borad[row][i] == val) return false;
         }
 
-        for(int i = 0; i < nums.size(); i++)
-        {   
-            //树层上去重(used[i - 1] == false),因为回溯了使用后重新赋值为false
-            //树枝上去重（used[i - 1] == true）
-            if(i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false)
-                continue;
+        for(int j = 0; j < 9; j++)  //判断列重复
+        {
+            if(borad[j][col] == val) return false;
+        }
 
-            if(used[i] == false) 
+        int startRow = (row / 3) * 3;
+        int startCol = (col / 3) * 3;
+        for(int i = startRow; i < startRow + 3; i++)
+        {
+            for(int j = startCol; j < startCol + 3; j++)
             {
-                used[i] = true;
-                path.push_back(nums[i]);
-                backtracking(nums, used);
-                path.pop_back();
-                used[i] = false;
+                if(borad[i][j] == val) return false;
             }
-
         }
+
+        return true;
     }
 
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<bool> used(nums.size(), false);
-        sort(nums.begin(), nums.end());
-        backtracking(nums, used);
-        return ret;
+    bool backtracking(vector<vector<char>>& borad)
+    {
+        for(int i = 0; i < borad.size(); i++)
+        {
+            for(int j = 0; j < borad[0].size(); j++)
+            {
+                if(borad[i][j] != '.') continue;
+                for(char k = '1'; k <= '9'; k++)
+                {
+                    if(isVaild(i, j, k, borad))
+                    {
+                        borad[i][j] = k;
+                        if(backtracking(borad)) return true;
+                        borad[i][j] = '.';
+                    }
+                }
+                return false;   //9个数都试完了，都不行返回false
+            }
+        }
+
+        return true;
+    }
+
+    void solveSudoku(vector<vector<char>>& board) {
+        backtracking(board);
     }
 };
 
 int main(int argc, char **argv)
 {   
-    vector<int> nums = {1,2,3};
+    vector<vector<char>> board = {{'5','3','.','.','7','.','.','.','.'},
+                                    {'6','.','.','1','9','5','.','.','.'},
+                                    {'.','9','8','.','.','.','.','6','.'},
+                                    {'8','.','.','.','6','.','.','.','3'},
+                                    {'4','.','.','8','.','3','.','.','1'},
+                                    {'7','.','.','.','2','.','.','.','6'},
+                                    {'.','6','.','.','.','.','2','8','.'},
+                                    {'.','.','.','4','1','9','.','.','5'},
+                                    {'.','.','.','.','8','.','.','7','9'}};
     Solution *so = new Solution();
-    vector<vector<int>> ret = so->permuteUnique(nums);
-    for(auto vec : ret)
+    so->solveSudoku(board);
+    for(auto vec : board)
     {
-        for(auto i : vec)
+        for(auto s : vec)
         {
-            cout << i << " ";
+            cout << s << " ";
         }
-
         cout << endl;
     }
+
     return 0;
 }
